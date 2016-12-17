@@ -1,3 +1,7 @@
+.if endianness() != "big"
+  .error "RDP macros will only produce correct results in big-endian mode!"
+.endif
+
 .macro No_Op //No Effect On RDP Command Execution, Useful For Padding Command Buffers
   .dw 0x00000000 // HI Word: COMMAND 0x00 (Bit 56..61)
   .dw 0x00000000 // LO Word: Zero (Bit 0..31)
