@@ -4,13 +4,13 @@
 .fill 1052672 // Set ROM Size
 .n64
 
-.include "../../lib/N64.INC" // Include N64 Definitions
-.include "../../lib/N64_GFX.INC" // Include Graphics Macros
-.include "../../lib/N64_RSP.INC" // Include RSP Macros
+.include "../../../lib/N64.INC" // Include N64 Definitions
+.include "../../../lib/N64_GFX.INC" // Include Graphics Macros
+.include "../../../lib/N64_RSP.INC" // Include RSP Macros
 
 .orga 0
-.include "../../lib/N64_HEADER.ASM" // Include 64 Byte Header & Vector Table
-.incbin "../../lib/N64_BOOTCODE.BIN" // Include 4032 Byte Boot Code
+.include "../../../lib/N64_HEADER.ASM" // Include 64 Byte Header & Vector Table
+.incbin "../../../lib/N64_BOOTCODE.BIN" // Include 4032 Byte Boot Code
 
 Start:
   N64_INIT // Run N64 Initialisation Routine
@@ -108,7 +108,7 @@ LoopBlocks:
   lqv v7, 0x50(a0) // V7 = DCTQ Row 6
   lqv v8, 0x60(a0) // V8 = DCTQ Row 7
   lqv v9, 0x70(a0) // V9 = DCTQ Row 8
-  
+
   vmudn v2, v24 // DCTQ *= Q Row 1
   vmudn v3, v25 // DCTQ *= Q Row 2
   vmudn v4, v26 // DCTQ *= Q Row 3
@@ -127,7 +127,7 @@ LoopBlocks:
   sqv v8, 0x60(a0) // DCTQ Row 7 = V8
   sqv v9, 0x70(a0) // DCTQ Row 8 = V9
 
-// Decode DCT 8x8 Block Using IDCT
+  // Decode DCT 8x8 Block Using IDCT
   // Fast IDCT Block Decode
   // Pass 1: Process Columns From Input, Store Into Work Array.
 
@@ -168,7 +168,7 @@ LoopBlocks:
   vadd v14, v12, v13 // Z5 = (Z3 + Z4) * 1.175875602 # SQRT(2) * C3
   vmulf v10, v14, v0[5]
   vadd v14, v10 // V14 = Z5
-  
+
   vmulf v10, v12, v1[0] // Z3 *= -1.961570560 # SQRT(2) * (-C3-C5)
   vsub v12, v10, v12 // V12 = Z3
 
@@ -287,7 +287,7 @@ LoopBlocks:
   vadd v14, v12, v13 // Z5 = (Z3 + Z4) * 1.175875602 # SQRT(2) * C3
   vmulf v10, v14, v0[5]
   vadd v14, v10 // V14 = Z5
-  
+
   vmulf v10, v12, v1[0] // Z3 *= -1.961570560 # SQRT(2) * (-C3-C5)
   vsub v12, v10, v12 // V12 = Z3
 
@@ -477,23 +477,23 @@ RSPData:
 .headersize 0 - orga() // Set Base Of RSP Data Object To Zero
 
 FIX_LUT: // Signed Fractions (S1.15) (Float * 32768)
-  .dh 9786   //  0.298631336 FIX( 0.298631336) Vector Register A[0]
-  .dh -12785 // -0.390180644 FIX(-0.390180644) Vector Register A[1]
-  .dh 17734  //  0.541196100 FIX( 0.541196100) Vector Register A[2]
-  .dh 25080  //  0.765366865 FIX( 0.765366865) Vector Register A[3]
-  .dh -29490 // -0.899976223 FIX(-0.899976223) Vector Register A[4]
-  .dh 5763   //  0.175875602 FIX( 1.175875602) Vector Register A[5]
-  .dh 16427  //  0.501321110 FIX( 1.501321110) Vector Register A[6]
-  .dh -27779 // -0.847759065 FIX(-1.847759065) Vector Register A[7]
+  .dh round(32768 * 0.298631336)  //  0.298631336 FIX( 0.298631336) Vector Register A[0]
+  .dh round(32768 * -0.390180644) // -0.390180644 FIX(-0.390180644) Vector Register A[1]
+  .dh round(32768 * 0.541196100)  //  0.541196100 FIX( 0.541196100) Vector Register A[2]
+  .dh round(32768 * 0.765366865)  //  0.765366865 FIX( 0.765366865) Vector Register A[3]
+  .dh round(32768 * -0.899976223) // -0.899976223 FIX(-0.899976223) Vector Register A[4]
+  .dh round(32768 * 0.175875602)  //  0.175875602 FIX( 1.175875602) Vector Register A[5]
+  .dh round(32768 * 0.501321110)  //  0.501321110 FIX( 1.501321110) Vector Register A[6]
+  .dh round(32768 * -0.847759065) // -0.847759065 FIX(-1.847759065) Vector Register A[7]
 
-  .dh -31509 // -0.961570560 FIX(-1.961570560) Vector Register B[0]
-  .dh 1741   //  0.053119869 FIX( 2.053119869) Vector Register B[1]
-  .dh -18446 // -0.562915447 FIX(-2.562915447) Vector Register B[2]
-  .dh 2383   //  0.072711026 FIX( 3.072711026) Vector Register B[3]
-  .dh 4096   //  0.125       FIX( 0.125)       Vector Register B[4]
-  .dh 0x0002  //  Left Shift Using Multiply: << 1 Vector Register B[5]
-  .dh 0x0020  //  Left Shift Using Multiply: << 5 Vector Register B[6]
-  .dh 0x2000  // Right Shift Using Multiply: >> 3 Vector Register B[7]
+  .dh round(32768 * -0.961570560) // -0.961570560 FIX(-1.961570560) Vector Register B[0]
+  .dh round(32768 * 0.053119869)  //  0.053119869 FIX( 2.053119869) Vector Register B[1]
+  .dh round(32768 * -0.562915447) // -0.562915447 FIX(-2.562915447) Vector Register B[2]
+  .dh round(32768 * 0.072711026)  //  0.072711026 FIX( 3.072711026) Vector Register B[3]
+  .dh round(32768 * 0.125)        //  0.125       FIX( 0.125)       Vector Register B[4]
+  .dh 0x0002                      //  Left Shift Using Multiply: << 1 Vector Register B[5]
+  .dh 0x0020                      //  Left Shift Using Multiply: << 5 Vector Register B[6]
+  .dh 0x2000                      // Right Shift Using Multiply: >> 3 Vector Register B[7]
 
 //Q: // JPEG Standard Quantization 8x8 Result Matrix (Quality = 10)
 //  dh 80,55,50,80,120,200,255,255
