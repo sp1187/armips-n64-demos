@@ -94,7 +94,7 @@ CLR_CLK equ 0x200 // DPC_STATUS: Clear CLOCK COUNTER (Bit 9)
   sw t0, SP_MEM_ADDR(a0) // Store Memory Offset To SP Memory Address Register (0xA4040000)
   la t0, start & 0x7FFFFFF // T0 = Aligned DRAM Physical RAM Offset (0x00000000..0x007FFFFF 8MB)
   sw t0, SP_DRAM_ADDR(a0) // Store RAM Offset To SP DRAM Address Register (0xA4040004)
-  la t0, ({end} - {start}) - 1 // T0 = Length Of DMA Transfer In Bytes - 1
+  la t0, (end - start) - 1 // T0 = Length Of DMA Transfer In Bytes - 1
   sw t0, SP_WR_LEN(a0) // Store DMA Length To SP Write Length Register (0xA404000C)
 .endmacro
 
@@ -113,7 +113,7 @@ CLR_CLK equ 0x200 // DPC_STATUS: Clear CLOCK COUNTER (Bit 9)
   mtc0 a0, $0 // Store Memory Offset To SP Memory Address Register  equ 0xA4040000)
   la a0, start & 0x7FFFFFF // A0 = Aligned DRAM Physical RAM Offset  equ 0x00000000..0x007FFFFF 8MB)
   mtc0 a0, $1 // Store RAM Offset To SP DRAM Address Register  equ 0xA4040004)
-  la a0, (end - start)-1 // A0 = Length Of DMA Transfer In Bytes - 1
+  la a0, (end - start) -1 // A0 = Length Of DMA Transfer In Bytes - 1
   mtc0 a0, $3 // Store DMA Length To SP Write Length Register  equ 0xA404000C)
 .endmacro
 

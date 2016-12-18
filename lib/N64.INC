@@ -143,16 +143,16 @@ VI_MPAL_CLOCK equ 48628316 // MPAL: Hz = 48.628316 MHz
 
 .macro DMA, start, end, dest // DMA Data Copy Cart->DRAM: Start Cart Address, End Cart Address, Destination DRAM Address
   lui a0, PI_BASE // A0 = PI Base Register (0xA4600000)
-  @@1:
+  @@L1:
     lw t0, PI_STATUS(a0) // T0 = Word From PI Status Register (0xA4600010)
     andi t0, 3 // AND PI Status With 3
-    bnez t0, @@1 // IF TRUE DMA Is Busy
+    bnez t0, @@L1 // IF TRUE DMA Is Busy
     nop // Delay Slot
 
   la t0, dest & 0x7FFFFF // T0 = Aligned DRAM Physical RAM Offset (0x00000000..0x007FFFFF 8MB)
   sw t0, PI_DRAM_ADDR(a0) // Store RAM Offset To PI DRAM Address Register (0xA4600000)
   la t0, 0x10000000 | (start & 0x3FFFFFF) // T0 = Aligned Cart Physical ROM Offset (0x10000000..0x13FFFFFF 64MB)
   sw t0, PI_CART_ADDR(a0) // Store ROM Offset To PI Cart Address Register (0xA4600004)
-  la t0, ({end} - {start}) - 1 // T0 = Length Of DMA Transfer In Bytes - 1
+  la t0, (end - start) - 1 // T0 = Length Of DMA Transfer In Bytes - 1
   sw t0, PI_WR_LEN(a0) // Store DMA Length To PI Write Length Register (0xA460000C)
 .endmacro
