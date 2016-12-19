@@ -17,7 +17,7 @@ Start:
 
   ScreenNTSC 320, 240, BPP32, 0xA0100000 // Screen NTSC: 320x240, 32BPP, DRAM Origin 0xA0100000
 
-  //WaitScanline 0x200  // Wait For Scanline To Reach Vertical Blank
+  WaitScanline 0x200  // Wait For Scanline To Reach Vertical Blank
 
   DPC RDPBuffer, RDPBufferEnd // Run DPC Command Buffer: Start, End
 
